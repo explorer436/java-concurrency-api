@@ -1,8 +1,28 @@
+The order in which the packages in the project should be studied:
+
+01 Using CompletableFuture as a Simple Future 
+02 CompletableFuture with Encapsulated Computation Logic
+03 Processing Results of Asynchronous Computations
+04 Combining Futures
+05 Difference Between thenApply() and thenCompose()
+06 Running multiple Futures in parallel
+07 Handing Errors
+08 Async Methods
+
 # Examples of the functionality and use cases of the CompletableFuture class that was introduced as a Java 8 Concurrency API improvement.
+
+http://cr.openjdk.java.net/~iris/se/12/latestSpec/api/java.base/java/util/concurrent/CompletionStage.html
+
+https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/java.base/java/util/concurrent/CompletableFuture.html
+
+Since the CompletableFuture class implements the CompletionStage interface, we first need to understand the contract of that interface. It represents a stage of a certain computation which can be done either synchronously or asynchronously. You can think of it as just a single unit of a pipeline of computations that ultimately generates a final result of interest. This means that several CompletionStages can be chained together so that one stage’s completion triggers the execution of another stage, which in turn triggers another, and so on.
+
+In addition to implementing the CompletionStage interface, CompletableFuture also implements Future, which represents a pending asynchronous event, with the ability to explicitly complete this Future, hence the name CompletableFuture.
 
 ## Asynchronous Computation in Java:
 
 ### Future vs CompletableFuture
+
 CompletableFuture is an extension to Java’s Future API which was introduced in Java 5.
 
 A Future is used as a reference to the result of an asynchronous computation. It provides an isDone() method to check whether the computation is done or not, and a get() method to retrieve the result of the computation when it is done.
@@ -15,7 +35,8 @@ Future API was a good step towards asynchronous programming in Java but it lacke
 
 1. It cannot be manually completed :
 
-Let’s say that you’ve written a function to fetch the latest price of an e-commerce product from a remote API. Since this API call is time-consuming, you’re running it in a separate thread and returning a Future from your function.
+Let’s say that you’ve written a function to fetch the latest price of an e-commerce product from a remote API. 
+Since this API call is time-consuming, you’re running it in a separate thread and returning a Future from your function.
 
 Now, let’s say that If the remote API service is down, then you want to complete the Future manually by the last cached price of the product.
 
@@ -55,15 +76,6 @@ Having this kind of parallelism greatly improves the performance of your program
 
 CompletableFuture is at the same time a building block and a framework, with about 50 different methods for composing, combining, and executing asynchronous computation steps and handling errors.
 Such a large API can be overwhelming, but these mostly fall in several clear and distinct use cases.
-
-01 Using CompletableFuture as a Simple Future 
-02 CompletableFuture with Encapsulated Computation Logic
-03 Processing Results of Asynchronous Computations
-04 Combining Futures
-05 Difference Between thenApply() and thenCompose()
-06 Running multiple Futures in parallel
-07 Handing Errors
-08 Async Methods
 
 #### References and TODOs:
 

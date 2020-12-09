@@ -11,6 +11,11 @@ import java.util.concurrent.ExecutionException;
    For building asynchronous systems we should be able to attach a callback to the CompletableFuture which should automatically get called when the Future completes.
    That way, we won’t need to wait for the result, and we can write the logic that needs to be executed after the completion of the Future inside our callback function.
    You can attach a callback to the CompletableFuture using thenApply(), thenAccept() and thenRun() methods -
+   
+   Note the behavioral keywords in thenApply:
+   1. then, which means that the action of this stage happens when the current stage completes normally (without an exception). In this case, the current stage is already completed with the value “message”.
+   2. Apply, which means the returned stage will apply a Function on the result of the previous stage.
+   The execution of the Function will be blocking, which means that get() will only be reached when the operation in thenApply() is done. 
   
  */
 public class ProcessingResultsOfAsynchronousComputations {

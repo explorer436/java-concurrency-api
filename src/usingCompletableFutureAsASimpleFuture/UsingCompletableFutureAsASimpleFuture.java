@@ -22,6 +22,10 @@ public class UsingCompletableFutureAsASimpleFuture {
 		// The CompletableFuture.get() method is blocking. It waits until the Future is completed and returns the result after its completion.
 		String result = completableFuture.get();
 		System.out.println("result: " + result); // Hello
+		
+		CompletableFuture<String> completedFuture = classUnderTest.returnCompletedFuture();	
+		System.out.println(completedFuture.getNow(null)); // Already completed!
+		
 	}
 	
 	/**
@@ -56,11 +60,19 @@ public class UsingCompletableFutureAsASimpleFuture {
 	
 	/**
 	 * 
+	    The simplest case creates an already completed CompletableFuture with a predefined result. Usually, this may act as the starting stage in your computation. 
+		The getNow(null) returns the result if completed (which is obviously the case), but otherwise returns null (the argument).
+
 	    If we already know the result of a computation, we can use the static completedFuture method with an argument that represents a result of this computation. 
 	    Consequently, the get method of the Future will never block, immediately returning this result instead:
 
-		Future<String> completableFuture = CompletableFuture.completedFuture("Hello");
 	 *
 	 */
+	public CompletableFuture<String> returnCompletedFuture() throws InterruptedException {
+
+		CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("Already completed!");
+
+        return completableFuture;
+    }
 
 }
