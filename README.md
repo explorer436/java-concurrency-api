@@ -11,10 +11,6 @@ The order in which the packages in the project should be studied:
 
 # Examples of the functionality and use cases of the CompletableFuture class that was introduced as a Java 8 Concurrency API improvement.
 
-http://cr.openjdk.java.net/~iris/se/12/latestSpec/api/java.base/java/util/concurrent/CompletionStage.html
-
-https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/java.base/java/util/concurrent/CompletableFuture.html
-
 Since the CompletableFuture class implements the CompletionStage interface, we first need to understand the contract of that interface. It represents a stage of a certain computation which can be done either synchronously or asynchronously. You can think of it as just a single unit of a pipeline of computations that ultimately generates a final result of interest. This means that several CompletionStages can be chained together so that one stage’s completion triggers the execution of another stage, which in turn triggers another, and so on.
 
 In addition to implementing the CompletionStage interface, CompletableFuture also implements Future, which represents a pending asynchronous event, with the ability to explicitly complete this Future, hence the name CompletableFuture.
@@ -78,6 +74,10 @@ CompletableFuture is at the same time a building block and a framework, with abo
 Such a large API can be overwhelming, but these mostly fall in several clear and distinct use cases.
 
 #### References and TODOs:
+
+http://cr.openjdk.java.net/~iris/se/12/latestSpec/api/java.base/java/util/concurrent/CompletionStage.html
+
+https://cr.openjdk.java.net/~iris/se/11/latestSpec/api/java.base/java/util/concurrent/CompletableFuture.html
 
 Runnable vs. Callable in Java: 
 https://www.baeldung.com/java-runnable-callable
