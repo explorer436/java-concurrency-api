@@ -15,13 +15,13 @@ public class UsingCompletableFutureAsASimpleFuture {
 	public static void main(String[] args) throws InterruptedException, ExecutionException {
 		UsingCompletableFutureAsASimpleFuture classUnderTest = new UsingCompletableFutureAsASimpleFuture();
 		
-		// Call the calculateAsync() method, receive the Future instance.
-		Future<String> completableFuture = classUnderTest.calculateAsync();	
+		// Call the calculateHelloAsync() method, receive the Future instance.
+		Future<String> completableFuture = classUnderTest.calculateHelloAsync();	
 
 		// Call the get method on the future instance when we're ready to block for the result.
+		// The CompletableFuture.get() method is blocking. It waits until the Future is completed and returns the result after its completion.
 		String result = completableFuture.get();
-		
-		System.out.println("result: " + result);
+		System.out.println("result: " + result); // Hello
 	}
 	
 	/**
@@ -32,10 +32,12 @@ public class UsingCompletableFutureAsASimpleFuture {
 	 * To spin off the computation, we use the Executor API. 
 	 * This method of creating and completing a CompletableFuture can be used together with any concurrency mechanism or API, including raw threads.
 	 */
-	public Future<String> calculateAsync() throws InterruptedException {
+	public Future<String> calculateHelloAsync() throws InterruptedException {
 
 	    CompletableFuture<String> completableFuture = new CompletableFuture<>();
 	
+	    // CompletableFuture.complete() method is used to manually complete a Future.
+	    // The get() method blocks until the Future is complete. So, if the complete() is not implemented, the get call will be blocked forever.
 	    Executors.newCachedThreadPool().submit(() -> {
 	        Thread.sleep(500);
 	        completableFuture.complete("Hello");
