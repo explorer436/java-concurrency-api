@@ -10,6 +10,11 @@ import java.util.concurrent.ExecutionException;
  * Instead of catching an exception in a syntactic block, the CompletableFuture class allows us to handle it in a special handle method. 
  * This method receives two parameters: a result of a computation (if it finished successfully), and the exception thrown (if some computation step did not complete normally).
  *
+ *
+ * Use the handle method to provide a default value when the asynchronous computation does not finish because of an error.
+ *
+ * The API also provides a more generic method - handle() to recover from exceptions. It is called whether or not an exception occurs.
+ * If an exception occurs, then the res argument will be null, otherwise, the ex argument will be null.
  */
 public class HandlingErrors {
 
@@ -33,12 +38,33 @@ public class HandlingErrors {
 			System.out.println("exception occurred. Here are the details:");
 			e.printStackTrace();
 		}
+
+        // ---------------------------
+		
+	    // Let’s first understand how errors are propagated in a callback chain. 
+		// Consider the following CompletableFuture callback chain -
+		CompletableFuture.supplyAsync(() -> {
+			// Code which might throw an exception
+			return "Some result";
+		}).thenApply(result -> {
+			return "processed result";
+		}).thenApply(result -> {
+			return "result after further processing";
+		}).thenAccept(result -> {
+			// do something with the final result
+		});
+	    // If an error occurs in the original supplyAsync() task, then none of the thenApply() callbacks will be called and future will be resolved with the exception occurred. 
+	    // If an error occurs in first thenApply() callback then 2nd and 3rd callbacks won’t be called and the future will be resolved with the exception occurred, and so on.
+
+        CompletableFuture<String> maturityFuture01 = classUnderTest.handleExceptionUsingExceptionally(-1);
+        System.out.println("Maturity : " + maturityFuture01.get()); 
+
+        CompletableFuture<String> maturityFuture02 = classUnderTest.handleExceptionUsingTheGenericHandleMethod(-1);
+        System.out.println("Maturity : " + maturityFuture02.get()); 
+
 	}
 
 
-	/*
-	 * Use the handle method to provide a default value when the asynchronous computation does not finish because of an error.
-	 */
 	public CompletableFuture<String> calculateNameAsync_handleExceptionWithADefaultValue(String name) {
        CompletableFuture<String> completableFuture  
          =  CompletableFuture.supplyAsync(() -> {
@@ -69,4 +95,47 @@ public class HandlingErrors {
 
        return completableFuture;
 	}
+
+    /*
+     * The error will not be propagated further in the callback chain if you handle it once.
+     */
+	public CompletableFuture<String> handleExceptionUsingExceptionally(Integer age) {
+		CompletableFuture<String> maturityFuture = CompletableFuture.supplyAsync(() -> {
+		    if(age < 0) {
+		        throw new IllegalArgumentException("Age can not be negative");
+		    }
+		    if(age > 18) {
+		        return "Adult";
+		    } else {
+		        return "Child";
+		    }
+		}).exceptionally(ex -> {
+		    System.out.println("Oops! We have an exception - " + ex.getMessage());
+		    return "Unknown!";
+		});
+
+       return maturityFuture;
+	}
+
+	public CompletableFuture<String> handleExceptionUsingTheGenericHandleMethod(Integer age) {
+		CompletableFuture<String> maturityFuture = CompletableFuture.supplyAsync(() -> {
+		    if(age < 0) {
+		        throw new IllegalArgumentException("Age can not be negative");
+		    }
+		    if(age > 18) {
+		        return "Adult";
+		    } else {
+		        return "Child";
+		    }
+		}).handle((res, ex) -> {
+		    if(ex != null) {
+		        System.out.println("Oops! We have an exception - " + ex.getMessage());
+		        return "Unknown!";
+		    }
+		    return res;
+		});
+
+       return maturityFuture;
+	}
+
 }

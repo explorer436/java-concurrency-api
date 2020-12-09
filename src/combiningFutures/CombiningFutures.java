@@ -2,6 +2,7 @@ package combiningFutures;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -35,11 +36,21 @@ public class CombiningFutures {
 		
 		
 		// PARALLEL
-		// If we want to execute two independent Futures and do something with their results, we can use the thenCombine method that accepts a Future and a Function with two arguments to process both results:
+		// If we want to execute two independent Futures and do something with their results after both are complete, 
+		// we can use the thenCombine method that accepts a Future and a Function with two arguments to process both results:
 		CompletableFuture<String> completableFuture02 = classUnderTest.calculateHelloAsync().thenCombine(classUnderTest.calculateWorldAsync(), (s1, s2) -> s1 + s2);
 		System.out.println(completableFuture02.get());
 		// Hello World
 		
+        // Another example:
+        System.out.println("Calculating BMI.");
+		CompletableFuture<Double> bmiFuture = classUnderTest.getWeightInKg()
+		        .thenCombine(classUnderTest.getHeightInCm(), (weightInKg, heightInCm) -> {
+		    Double heightInMeter = heightInCm/100;
+		    return weightInKg/(heightInMeter*heightInMeter);
+		});
+		System.out.println("Your BMI is - " + bmiFuture.get()); // Your BMI is - 20.56126561232714
+
 
 		// A simpler case is when we want to do something with two Futures‘ results, but don't need to pass any resulting value down a Future chain. 
 		// The thenAcceptBoth method is there to help.
@@ -56,5 +67,31 @@ public class CombiningFutures {
 	public CompletableFuture<String> calculateWorldAsync() throws InterruptedException {
 		CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> " World");
 	    return completableFuture;
+	}	
+
+	public CompletableFuture<Double> getHeightInCm() throws InterruptedException {
+		System.out.println("Retrieving height.");
+		CompletableFuture<Double> heightInCmFuture = CompletableFuture.supplyAsync(() -> {
+		    try {
+		        TimeUnit.SECONDS.sleep(1);
+		    } catch (InterruptedException e) {
+		       throw new IllegalStateException(e);
+		    }
+		    return 177.8;
+		});
+	    return heightInCmFuture;
+	}	
+
+	public CompletableFuture<Double> getWeightInKg() throws InterruptedException {
+		System.out.println("Retrieving weight.");
+		CompletableFuture<Double> weightInKgFuture = CompletableFuture.supplyAsync(() -> {
+		    try {
+		        TimeUnit.SECONDS.sleep(1);
+		    } catch (InterruptedException e) {
+		       throw new IllegalStateException(e);
+		    }
+		    return 65.0;
+		});
+        return weightInKgFuture;
 	}	
 }
