@@ -1,13 +1,13 @@
 The order in which the packages in the project should be studied:
 
-01 Using CompletableFuture as a Simple Future 
-02 CompletableFuture with Encapsulated Computation Logic
-03 Processing Results of Asynchronous Computations
-04 Combining Futures
-05 Difference Between thenApply() and thenCompose()
-06 Running multiple Futures in parallel
-07 Handing Errors
-08 Async Methods
+1. Using CompletableFuture as a Simple Future 
+1. CompletableFuture with Encapsulated Computation Logic
+1. Processing Results of Asynchronous Computations
+1. Combining Futures
+1. Difference Between thenApply() and thenCompose()
+1. Running multiple Futures in parallel
+1. Handing Errors
+1. Async Methods
 
 # Examples of the functionality and use cases of the CompletableFuture class that was introduced as a Java 8 Concurrency API improvement.
 
